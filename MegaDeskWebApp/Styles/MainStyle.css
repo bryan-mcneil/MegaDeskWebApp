@@ -1,0 +1,59 @@
+﻿header {
+    display: flex;
+    justify-content: center;
+}
+
+#current {
+    background-color: black;
+}
+
+#nav_list {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: royalblue;
+}
+
+.list_content {
+    float: left;
+}
+
+.nav_link {
+    font-family: Arial;
+    display: block;
+    padding: 14px 50px;
+    color: white;
+    background-color: royalblue;
+    text-align: center;
+    text-decoration: none;
+}
+
+.nav_link:hover {
+    background-color: black;
+}
+
+#HeadTitle {
+    text-align: center;
+}
+
+.container {
+    position: relative;
+}
+
+.main_center {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    padding: 30px;
+    background-color: white;
+}
+
+#mainImg {
+    width: 100%;
+    height: auto;
+}
