@@ -1,6 +1,41 @@
 ﻿@{
     Page.Title = "Add New Order";
     Layout = "~/_Layout.cshtml";
+
+    Validation.RequireField("First", "You must specify a First Name");
+    Validation.RequireField("Last", "You must specify a Last Name");
+    Validation.RequireField("ShippingDays", "You must specify the desired shipping");
+    Validation.RequireField("Width", "You must specify a width");
+    Validation.RequireField("Depth", "You must specify a depth");
+    Validation.RequireField("DrawerCount", "You must specify the number of drawers");
+    Validation.RequireField("SurfaceMaterial", "You must select a material");
+
+    var Date = DateTime.Now;
+    var First = "";
+    var Last = "";
+    var DeskCost = 0;
+    var ShippingDays = 0;
+    var ShippingCost = 0;
+    var Width = 0;
+    var Depth = 0;
+    var DrawerCount = 0;
+    var SurfaceMaterial = "";
+
+    if (IsPost && Validation.IsValid())
+    {
+        First = Request.Form["First"];
+        Last = Request.Form["Last"];
+        ShippingDays = Convert.ToInt32(Request.Form["ShippingDays"]);
+        Width = Convert.ToInt32(Request.Form["Width"]);
+        Depth = Convert.ToInt32(Request.Form["Depth"]);
+        DrawerCount = Convert.ToInt32(Request.Form["DrawerCount"]);
+        SurfaceMaterial = Request.Form["SurfaceMaterial"];
+        
+        var db = Database.Open("MegaDesk");
+    var insertCommand = "INSERT INTO MegaDesk (Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial) VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)";
+    db.Execute(insertCommand, Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial);
+        Response.Redirect("~/MainPage");
+    }
 }
 
 <h1 id="HeadTitle">Mega Desk Order Site</h1>
@@ -20,3 +55,57 @@
         </li>
     </ul>
 </nav>
+
+
+<h1>Add a Scripture</h1>
+@Html.ValidationSummary()
+<form method="post">
+    <fieldset>
+        <legend>Scripture Information</legend>
+        <p>
+            <label for="First">First Name:</label>
+            <input type="text" name="First" value="@Request.Form["First"]" />
+            @Html.ValidationMessage("First");
+        </p>
+
+        <p>
+            <label for="Last">Last Name:</label>
+            <input type="text" name="Last" value="@Request.Form["Last"]" />
+            @Html.ValidationMessage("Last");
+        </p>
+
+        <p>
+            <label for="Width">Width:</label>
+            <input type="text" name="Width" value="@Request.Form["Width"]" />
+            @Html.ValidationMessage("Width");
+        </p>
+
+        <p>
+            <label for="Depth">Depth:</label>
+            <input type="text" name="Depth" value="@Request.Form["Depth"]" />
+            @Html.ValidationMessage("Depth");
+        </p>
+
+        <p>
+            <label for="DrawerCount">Drawer Count:</label>
+            <input type="text" name="DrawerCount" value="@Request.Form["DrawerCount"]" />
+            @Html.ValidationMessage("DrawerCount");
+        </p>
+        
+        <select>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+        </select>
+
+        <select>
+            <option value="volvo">1</option>
+            <option value="saab">3</option>
+            <option value="mercedes">5</option>
+            <option value="audi">7</option>
+        </select>
+        
+        <p><input type="submit" name="buttonSubmit" value="Add Scripture" /></p>
+    </fieldset>
+</form>
