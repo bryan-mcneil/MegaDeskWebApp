@@ -14,11 +14,11 @@
     var Date = DateTime.Now;
     var First = "";
     var Last = "";
-    var DeskCost = 0;
+    var DeskCost = 0.0;
     var ShippingDays = 0;
-    var ShippingCost = 0;
-    var Width = 0;
-    var Depth = 0;
+    var ShippingCost = 0.0;
+    var Width = 0.0;
+    var Depth = 0.0;
     var DrawerCount = 0;
     var SurfaceMaterial = "";
 
@@ -31,16 +31,35 @@
     {
         SizeCost = SizeCost - 1000;
     }
-    var SurfaceValue = Convert.ToInt32(Request.Form["SurfaceMaterial"]);
 
 
 
-
-
+    var SurfaceValue = 0;
+    if (SurfaceMaterial == "Oak")
+    {
+        SurfaceValue = 200;
+    }
+    else if (SurfaceMaterial == "Laminate")
+    {
+        SurfaceValue = 100;
+    }
+    else if (SurfaceMaterial == "Pine")
+    {
+        SurfaceValue = 50;
+    }
+    else if (SurfaceMaterial == "Rosewood")
+    {
+        SurfaceValue = 300;
+    }
+    else if (SurfaceMaterial == "Veneer")
+    {
+        SurfaceValue = 125;
+    }
+    
 
 
     // Calculate Shipping
-    int i;
+    var i = 0;
     if (DeskSize < 1000){i = 0;}
     else if (DeskSize > 1000 && DeskSize < 2000){i = 1;}
     else{i = 2;}
@@ -65,28 +84,20 @@
             break;
     }
 
-
-
-
-
-
-
-
-
     if (IsPost && Validation.IsValid())
     {
         First = Request.Form["First"];
         Last = Request.Form["Last"];
-        DeskCost = BaseDeskCost + DrawerCost + SizeCost + SurfaceValue;
+        DeskCost = BaseDeskCost + DrawerCost + SizeCost + SurfaceValue + ShippingCost;
         ShippingDays = Convert.ToInt32(Request.Form["ShippingDays"]);
-        //ShippingCost = ShippingCost;
+//      ShippingCost = ShippingCost;
         Width = Convert.ToInt32(Request.Form["Width"]);
         Depth = Convert.ToInt32(Request.Form["Depth"]);
         DrawerCount = Convert.ToInt32(Request.Form["DrawerCount"]);
         SurfaceMaterial = Request.Form["SurfaceMaterial"];
-        
+
         var db = Database.Open("MegaDesk");
-        var insertCommand = "INSERT INTO MegaDesk (Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial) VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)";
+        var insertCommand = "INSERT INTO MegaDesk (Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial) VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9)";
         db.Execute(insertCommand, Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial);
         Response.Redirect("~/MainPage");
     }
@@ -148,19 +159,19 @@
         
         <label for="SurfaceMaterial">Surface Material:</label>
         <select name="SurfaceMaterial">
-            <option value=200>Oak</option>
-            <option value=100>Laminate</option>
-            <option value=50>Pine</option>
-            <option value=300>Rosewood</option>
-            <option value=125>Veneer</option>
+            <option value="Oak">Oak</option>
+            <option value="Laminate">Laminate</option>
+            <option value="Pine">Pine</option>
+            <option value="Rosewood">Rosewood</option>
+            <option value="Veneer">Veneer</option>
         </select>
 
         <label for="ShippingDays">Shipping Days:</label>
         <select name="ShippingDays">
-            <option value="1">1 Day</option>
-            <option value="3">3 Day</option>
-            <option value="5">5 Day</option>
-            <option value="7">7 Day</option>
+            <option value=3>1 Day</option>
+            <option value=5>3 Day</option>
+            <option value=7>5 Day</option>
+            <option value=14>7 Day</option>
         </select>
         
         <p><input type="submit" name="buttonSubmit" value="Add Scripture" /></p>
