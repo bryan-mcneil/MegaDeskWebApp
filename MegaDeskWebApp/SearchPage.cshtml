@@ -1,6 +1,20 @@
 ﻿@{
     Page.Title = "Search Orders";
     Layout = "~/_Layout.cshtml";
+
+    var db = Database.Open("MegaDesk");
+    var selectCommand = "SELECT * FROM MegaDesk";
+    var searchTerm = "";
+
+    if (!Request.QueryString["searchMaterial"].IsEmpty())
+    {
+        selectCommand = "SELECT * FROM MegaDesk WHERE SurfaceMaterial = @0";
+        searchTerm = Request.QueryString["searchMaterial"];
+    }
+
+    var selectedData = db.Query(selectCommand, searchTerm);
+    var grid = new WebGrid(source: selectedData, defaultSort: "Date");
+
 }
 
 <h1 id="HeadTitle">Mega Desk Order Site</h1>
@@ -20,3 +34,40 @@
         </li>
     </ul>
 </nav>
+
+<h2>Search Orders</h2>
+
+<form method="get">
+
+    <div>
+        <label for="searchMaterial">Search by Material:</label>
+        <select name="searchMaterial">
+            <option value="Pine">Pine</option>
+            <option value="Rosewood">Rosewood</option>
+            <option value="Laminate">Laminate</option>
+            <option value="Oak">Oak</option>
+            <option value="Veneer">Veneer</option>
+        </select>
+        <input type="Submit" value="Search Material" /><br />
+    </div>
+</form>
+
+<div>
+    @grid.GetHtml(
+    tableStyle: "grid",
+    headerStyle: "head",
+    alternatingRowStyle: "alt",
+    columns: grid.Columns(
+        grid.Column("Date"),
+        grid.Column("First"),
+        grid.Column("Last"),
+        grid.Column("DeskCost"),
+        grid.Column("ShippingDays"),
+        grid.Column("ShippingCost"),
+        grid.Column("Width"),
+        grid.Column("Depth"),
+        grid.Column("DrawerCount"),
+        grid.Column("SurfaceMaterial")
+    )
+)
+</div>
