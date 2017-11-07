@@ -10,6 +10,7 @@
     Validation.RequireField("DrawerCount", "You must specify the number of drawers");
     Validation.RequireField("SurfaceMaterial", "You must select a material");
 
+    //Declare all the crap
     var Date = DateTime.Now;
     var First = "";
     var Last = "";
@@ -21,19 +22,72 @@
     var DrawerCount = 0;
     var SurfaceMaterial = "";
 
+    // Calculating Variables
+    var DeskSize = Width * Depth;
+    var BaseDeskCost = 200;
+    var DrawerCost = DrawerCount * 50;
+    var SizeCost = DeskSize;
+    if (DeskSize > 1000)
+    {
+        SizeCost = SizeCost - 1000;
+    }
+    var SurfaceValue = Convert.ToInt32(Request.Form["SurfaceMaterial"]);
+
+
+
+
+
+
+
+    // Calculate Shipping
+    int i;
+    if (DeskSize < 1000){i = 0;}
+    else if (DeskSize > 1000 && DeskSize < 2000){i = 1;}
+    else{i = 2;}
+
+    switch (ShippingDays)
+    {
+        case 3:
+            double[] ThreeDay = new double[3] { 60, 70, 80 };
+            ShippingCost = Convert.ToInt32(ThreeDay[i]);
+            break;
+        case 5:
+            double[] FiveDay = new double[3] { 40, 50, 60 };
+            ShippingCost = Convert.ToInt32(FiveDay[i]);
+            break;
+        case 7:
+            double[] SevenDay = new double[3] { 30, 35, 40 };
+            ShippingCost = Convert.ToInt32(SevenDay[i]);
+            break;
+        default:
+            double[] FourteenDay = new double[3] { 0, 0, 0 };
+            ShippingCost = Convert.ToInt32(FourteenDay[i]);
+            break;
+    }
+
+
+
+
+
+
+
+
+
     if (IsPost && Validation.IsValid())
     {
         First = Request.Form["First"];
         Last = Request.Form["Last"];
+        DeskCost = BaseDeskCost + DrawerCost + SizeCost + SurfaceValue;
         ShippingDays = Convert.ToInt32(Request.Form["ShippingDays"]);
+        //ShippingCost = ShippingCost;
         Width = Convert.ToInt32(Request.Form["Width"]);
         Depth = Convert.ToInt32(Request.Form["Depth"]);
         DrawerCount = Convert.ToInt32(Request.Form["DrawerCount"]);
         SurfaceMaterial = Request.Form["SurfaceMaterial"];
         
         var db = Database.Open("MegaDesk");
-    var insertCommand = "INSERT INTO MegaDesk (Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial) VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)";
-    db.Execute(insertCommand, Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial);
+        var insertCommand = "INSERT INTO MegaDesk (Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial) VALUES(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10)";
+        db.Execute(insertCommand, Date, First, Last, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial);
         Response.Redirect("~/MainPage");
     }
 }
@@ -92,18 +146,21 @@
             @Html.ValidationMessage("DrawerCount");
         </p>
         
-        <select>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="mercedes">Mercedes</option>
-            <option value="audi">Audi</option>
+        <label for="SurfaceMaterial">Surface Material:</label>
+        <select name="SurfaceMaterial">
+            <option value=200>Oak</option>
+            <option value=100>Laminate</option>
+            <option value=50>Pine</option>
+            <option value=300>Rosewood</option>
+            <option value=125>Veneer</option>
         </select>
 
-        <select>
-            <option value="volvo">1</option>
-            <option value="saab">3</option>
-            <option value="mercedes">5</option>
-            <option value="audi">7</option>
+        <label for="ShippingDays">Shipping Days:</label>
+        <select name="ShippingDays">
+            <option value="1">1 Day</option>
+            <option value="3">3 Day</option>
+            <option value="5">5 Day</option>
+            <option value="7">7 Day</option>
         </select>
         
         <p><input type="submit" name="buttonSubmit" value="Add Scripture" /></p>
