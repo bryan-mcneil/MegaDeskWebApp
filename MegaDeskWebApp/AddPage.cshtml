@@ -94,7 +94,7 @@
                 break;
         }
 
-        DeskCost = BaseDeskCost + DrawerCost + SizeCost + SurfaceValue;
+        DeskCost = BaseDeskCost + DrawerCost + SizeCost + SurfaceValue + ShippingCost;
 
         var db = Database.Open("MegaDesk");
         var insertCommand = "INSERT INTO MegaDesk (Date, FirstName, LastName, DeskCost, ShippingDays, ShippingCost, Width, Depth, DrawerCount, SurfaceMaterial) " +
@@ -169,7 +169,6 @@
 
         <label for="ShippingDays">Shipping Days:</label>
         <select name="ShippingDays">
-            <option value=1>1 Day</option>
             <option value=3>3 Day</option>
             <option value=5>5 Day</option>
             <option value=7>7 Day</option>
